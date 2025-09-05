@@ -1,0 +1,25 @@
+import pandas as pd
+
+# Load dataset
+df = pd.read_csv("students.csv")  # CSV should have columns: Name, Math, Science, English
+
+# Calculate per subject stats
+print("\n--- Subject Stats ---")
+for subj in df.columns[1:]:
+    print(f"{subj}: Avg={df[subj].mean():.2f}, High={df[subj].max()}, Low={df[subj].min()}")
+
+# Add Average column
+df["Average"] = df.iloc[:, 1:].mean(axis=1)
+
+# Top 3 students
+print("\n--- Top 3 Students ---")
+print(df.nlargest(3, "Average")[["Name", "Average"]])
+
+# Bonus: Pass/Fail column (threshold 40%)
+df["Result"] = df["Average"].apply(lambda x: "Pass" if x >= 40 else "Fail")
+
+print("\n--- Final Data ---")
+print(df)
+
+# Save updated CSV
+df.to_csv("students_result.csv", index=False)
